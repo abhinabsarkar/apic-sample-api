@@ -1,0 +1,243 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "Sample_API"
+  title: "Sample API"
+  version: "1.0.0"
+  description: "Sample API"
+  contact:
+    name: ""
+    email: ""
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/passport"
+consumes:
+- "application/xml"
+produces:
+- "application/xml"
+securityDefinitions:
+  Client-SecretSecret:
+    type: "apiKey"
+    description: ""
+    in: "header"
+    name: "X-IBM-Client-Secret"
+  clientIdHeader:
+    type: "apiKey"
+    in: "header"
+    name: "X-IBM-Client-Id"
+    description: ""
+security:
+- clientIdHeader: []
+  Client-SecretSecret: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - switch:
+        title: "switch"
+        case:
+        - condition: "((request.verb==='POST')&&(api.operation.path==='/createlegalhold'))"
+          execute:
+          - invoke:
+              title: "CreateLegalHold"
+              timeout: 60
+              verb: "POST"
+              cache-response: "protocol"
+              cache-ttl: 900
+              stop-on-error: []
+              version: "1.0.0"
+              target-url: "$(createlegalhold)"
+              username: ""
+              password: ""
+        - condition: "((request.verb==='POST')&&(api.operation.path==='/creatematter'))"
+          execute:
+          - invoke:
+              title: "CreateMatter"
+              timeout: 60
+              verb: "POST"
+              cache-response: "protocol"
+              cache-ttl: 900
+              stop-on-error: []
+              version: "1.0.0"
+              description: ""
+              username: ""
+              password: ""
+              target-url: "$(creatematter)"
+        - condition: "((request.verb==='PUT')&&(api.operation.path==='/updateMatter/{matter_id}'))"
+          execute:
+          - invoke:
+              title: "UpdateMatter"
+              timeout: 60
+              verb: "PUT"
+              cache-response: "protocol"
+              cache-ttl: 900
+              stop-on-error: []
+              version: "1.0.0"
+              target-url: "$(updatematter)/$(request.parameters.matter_id)"
+              username: ""
+              password: ""
+        - condition: "((request.verb==='GET')&&(api.operation.path==='/search'))"
+          execute:
+          - invoke:
+              target-url: "$(envokesearchurl)$(request.parameters.searchparameters)"
+              tls-profile: ""
+              verb: "GET"
+              username: ""
+              password: ""
+              title: "search"
+        - condition: "((request.verb==='GET')&&(api.operation.path==='/entity/{entity_name}/{entity_ID}'))"
+          execute:
+          - invoke:
+              title: "entity"
+              timeout: 60
+              verb: "GET"
+              cache-response: "protocol"
+              cache-ttl: 900
+              stop-on-error:
+              - null
+              version: "1.0.0"
+              target-url: "$(entity)$(request.parameters.entity_name)/$(request.parameters.entity_ID)"
+              username: ""
+              password: ""
+        - condition: "((request.verb==='PUT')&&(api.operation.path==='/update/{legalhold}'))"
+          execute:
+          - invoke:
+              title: "UpdateLegalhold"
+              timeout: 60
+              verb: "PUT"
+              cache-response: "protocol"
+              cache-ttl: 900
+              stop-on-error: []
+              version: "1.0.0"
+              target-url: "$(updatelegalhold)/$(request.parameters.legalhold)"
+              username: ""
+              password: ""
+        version: "1.0.0"
+  phase: "realized"
+  categories:
+  - "ENT/Legal"
+  properties:
+    entity:
+      value: ""
+      description: ""
+      encoded: false
+    updatematter:
+      value: ""
+      description: ""
+      encoded: false
+    creatematter:
+      value: ""
+      description: ""
+      encoded: false
+    updatelegalhold:
+      value: ""
+      description: ""
+      encoded: false
+    createlegalhold:
+      value: ""
+      description: ""
+      encoded: false
+    envokesearchurl:
+      value: ""
+      description: ""
+      encoded: false
+  catalogs:
+    sb:
+      properties:
+        envokesearchurl: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold?searchParameters="
+        createlegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
+        updatelegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
+        creatematter: "https://backendapi.mydomain.com/Passport/datacert/api/entity/Matter"
+        updatematter: "https://backendapi.mydomain.com/Passport/datacert/api/entity/Matter"
+        entity: "https://backendapi.mydomain.com/Passport/datacert/api/entity/"
+    list-extstg:
+      properties:
+        envokesearchurl: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold?searchParameters="
+        createlegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
+        updatelegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
+        creatematter: "https://backendapi.mydomain.com/Passport/datacert/api/entity/Matter"
+        updatematter: "https://backendapi.mydomain.com/Passport/datacert/api/entity/Matter"
+        entity: "https://backendapi.mydomain.com/Passport/datacert/api/entity/"
+paths:
+  /search:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "searchparameters"
+      type: "string"
+      required: false
+      in: "query"
+  /createlegalhold:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "payload"
+      required: false
+      in: "body"
+      schema:
+        type: "string"
+  /creatematter:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "payload"
+      required: false
+      in: "body"
+      schema:
+        type: "string"
+  /entity/{entity_name}/{entity_ID}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "entity_name"
+      type: "string"
+      required: true
+      in: "path"
+    - name: "entity_ID"
+      type: "string"
+      required: true
+      in: "path"
+  /updateMatter/{matter_id}:
+    put:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "payload"
+      required: false
+      in: "body"
+      schema:
+        type: "string"
+    - name: "matter_id"
+      type: "string"
+      required: true
+      in: "path"
+  /update/{legalhold}:
+    put:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "payload"
+      required: false
+      in: "body"
+      schema:
+        type: "object"
+    - name: "legalhold"
+      required: true
+      in: "path"
+      type: "string"
+definitions: {}
+tags: []

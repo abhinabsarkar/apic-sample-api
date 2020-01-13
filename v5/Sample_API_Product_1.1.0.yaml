@@ -1,0 +1,31 @@
+---
+product: "1.0.0"
+info:
+  name: "Sample_API_Product"
+  title: "Sample API Product"
+  version: "1.1.0"
+  description: "Sample API Product"
+  contact:
+    name: ""
+visibility:
+  view:
+    enabled: true
+    type: "public"
+    tags: []
+    orgs: []
+  subscribe:
+    enabled: true
+    type: "authenticated"
+    tags: []
+    orgs: []
+apis:
+  Sample_API:
+    $ref: "Sample_API_1.1.0.yaml"
+plans:
+  default:
+    title: "Default Plan"
+    description: "Default Plan"
+    approval: true
+    rate-limit:
+      hard-limit: true
+      value: "100/hour"
