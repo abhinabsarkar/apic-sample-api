@@ -1,2 +1,2 @@
-# apic-sample-api
+# APIC Sample API
 Sample API
