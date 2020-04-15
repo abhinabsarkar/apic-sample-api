@@ -3,11 +3,10 @@ swagger: "2.0"
 info:
   x-ibm-name: "Sample_API"
   title: "Sample API"
-  version: "1.0.0"
+  version: "1.1.0"
   description: "Sample API"
   contact:
     name: ""
-    email: ""
 schemes:
 - "https"
 host: "$(catalog.host)"
@@ -83,7 +82,7 @@ x-ibm-configuration:
         - condition: "((request.verb==='GET')&&(api.operation.path==='/search'))"
           execute:
           - invoke:
-              target-url: "$(envokesearchurl)$(request.parameters.searchparameters)"
+              target-url: "$(invoke-search-url)$(request.querystring)"
               tls-profile: ""
               verb: "GET"
               username: ""
@@ -141,14 +140,14 @@ x-ibm-configuration:
       value: ""
       description: ""
       encoded: false
-    envokesearchurl:
+    invoke-search-url:
       value: ""
       description: ""
       encoded: false
   catalogs:
     sb:
       properties:
-        envokesearchurl: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold?searchParameters="
+        invoke-search-url: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold?"
         createlegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
         updatelegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
         creatematter: "https://backendapi.mydomain.com/Passport/datacert/api/entity/Matter"
@@ -156,7 +155,7 @@ x-ibm-configuration:
         entity: "https://backendapi.mydomain.com/Passport/datacert/api/entity/"
     list-extstg:
       properties:
-        envokesearchurl: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold?searchParameters="
+        invoke-search-url: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold?"
         createlegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
         updatelegalhold: "https://backendapi.mydomain.com/Passport/datacert/api/entity/LegalHold"
         creatematter: "https://backendapi.mydomain.com/Passport/datacert/api/entity/Matter"
@@ -169,10 +168,15 @@ paths:
         200:
           description: "200 OK"
     parameters:
-    - name: "searchparameters"
+    - name: "param1"
       type: "string"
+      required: true
+      in: "query"
+    - name: "param2"
+      type: "integer"
       required: false
       in: "query"
+      format: "int32"
   /createlegalhold:
     post:
       responses:
